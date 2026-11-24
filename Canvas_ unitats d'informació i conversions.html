@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Canvas: unitats d’informació i conversions</title>
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#eef3f7; --surface:#ffffff; --ink:#14232f; --muted:#51656f;
+  --line:#c5d3dc; --flow:#0a7d8c; --up:#0a7d8c; --down:#c2410c; --hi:#e3f1f4;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1b24; --surface:#17262f; --ink:#e6eef3; --muted:#9db0bb;
+    --line:#2c4150; --flow:#4cc3d3; --up:#4cc3d3; --down:#f59e6b; --hi:#1b3540;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1b24; --surface:#17262f; --ink:#e6eef3; --muted:#9db0bb;
+  --line:#2c4150; --flow:#4cc3d3; --up:#4cc3d3; --down:#f59e6b; --hi:#1b3540;
+  color-scheme:dark;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif}
+main{max-width:1040px;margin:0 auto;padding:28px 18px 40px}
+h1{font-size:clamp(1.6rem,4vw,2.3rem);line-height:1.15;margin:0 0 6px;letter-spacing:-.01em}
+.sub{color:var(--muted);margin:0 0 22px;max-width:62ch}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;min-width:0}
+.box h2{font-size:1.05rem;margin:0 0 8px}
+.box p{margin:0 0 8px}
+.box p:last-child{margin-bottom:0}
+.c12{grid-column:span 12}.c7{grid-column:span 7}.c5{grid-column:span 5}.c6{grid-column:span 6}
+@media(max-width:760px){.c7,.c5,.c6{grid-column:span 12}}
+.def{border-left:5px solid var(--flow)}
+.note{color:var(--muted);font-size:.92rem}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.93rem}
+th,td{text-align:left;padding:5px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+thead th{font-weight:600;color:var(--muted);font-size:.88rem;white-space:nowrap}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+.ladder{width:100%;height:auto;display:block}
+.ladder text{fill:var(--ink);font:13px "Segoe UI",system-ui,sans-serif}
+.ladder .box-u{fill:var(--hi);stroke:var(--line)}
+.up{color:var(--up);font-weight:600}.down{color:var(--down);font-weight:600}
+.formula{background:var(--hi);border-radius:8px;padding:10px 14px;margin:8px 0;font-size:1.15rem;font-weight:600;text-align:center}
+.steps{margin:6px 0 0;padding-left:20px}
+.steps li{padding:2px 0}
+.rule{display:flex;gap:10px;align-items:baseline;margin:6px 0}
+.tag{flex:none;background:var(--hi);border-radius:6px;padding:2px 10px;font-weight:600}
+</style>
+</head>
+<body>
+<main>
+  <h1>Unitats d’informació i conversions</h1>
+  <p class="sub">Per calcular una taxa de transferència primer cal posar mida i temps en unitats compatibles. Aquest canvas recull l’escala d’unitats, les regles de conversió i les fórmules.</p>
+
+  <div class="grid">
+
+    <section class="box def c12">
+      <h2>Regla d’or</h2>
+      <p>Entre unitats de <strong>byte</strong> (B, KB, MB, GB, TB) es passa de l’una a l’altra amb <strong>1024</strong>. Entre <strong>bit</strong> i <strong>byte</strong> amb <strong>8</strong>.</p>
+    </section>
+
+    <section class="box c6">
+      <h2>Escala de conversió</h2>
+      <svg class="ladder" viewBox="0 0 480 330" role="img" aria-label="Escala d'unitats: de bit a TB, multiplicant per 8 o per 1024 en baixar i dividint en pujar"><defs><marker id="ad" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--down)"/></marker><marker id="au" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--up)"/></marker></defs><rect class="box-u" x="14" y="286" width="56" height="32" rx="6"/><text x="42.0" y="307" text-anchor="middle">bit</text><rect class="box-u" x="90" y="230" width="56" height="32" rx="6"/><text x="118.0" y="251" text-anchor="middle">B</text><rect class="box-u" x="166" y="174" width="56" height="32" rx="6"/><text x="194.0" y="195" text-anchor="middle">KB</text><rect class="box-u" x="242" y="118" width="56" height="32" rx="6"/><text x="270.0" y="139" text-anchor="middle">MB</text><rect class="box-u" x="318" y="62" width="56" height="32" rx="6"/><text x="346.0" y="83" text-anchor="middle">GB</text><rect class="box-u" x="394" y="6" width="56" height="32" rx="6"/><text x="422.0" y="27" text-anchor="middle">TB</text><path d="M36.0 283 C36.0 246.0 64 246.0 86 246.0" fill="none" stroke="var(--down)" stroke-width="2" marker-end="url(#ad)"/><text x="8" y="240.0" style="fill:var(--down)">/ 8</text><path d="M124.0 265 C124.0 302.0 96 302.0 74 302.0" fill="none" stroke="var(--up)" stroke-width="2" marker-end="url(#au)"/><text x="80" y="320.0" style="fill:var(--up)">× 8</text><path d="M112.0 227 C112.0 190.0 140 190.0 162 190.0" fill="none" stroke="var(--down)" stroke-width="2" marker-end="url(#ad)"/><text x="84" y="184.0" style="fill:var(--down)">/ 1024</text><path d="M200.0 209 C200.0 246.0 172 246.0 150 246.0" fill="none" stroke="var(--up)" stroke-width="2" marker-end="url(#au)"/><text x="156" y="264.0" style="fill:var(--up)">× 1024</text><path d="M188.0 171 C188.0 134.0 216 134.0 238 134.0" fill="none" stroke="var(--down)" stroke-width="2" marker-end="url(#ad)"/><text x="160" y="128.0" style="fill:var(--down)">/ 1024</text><path d="M276.0 153 C276.0 190.0 248 190.0 226 190.0" fill="none" stroke="var(--up)" stroke-width="2" marker-end="url(#au)"/><text x="232" y="208.0" style="fill:var(--up)">× 1024</text><path d="M264.0 115 C264.0 78.0 292 78.0 314 78.0" fill="none" stroke="var(--down)" stroke-width="2" marker-end="url(#ad)"/><text x="236" y="72.0" style="fill:var(--down)">/ 1024</text><path d="M352.0 97 C352.0 134.0 324 134.0 302 134.0" fill="none" stroke="var(--up)" stroke-width="2" marker-end="url(#au)"/><text x="308" y="152.0" style="fill:var(--up)">× 1024</text><path d="M340.0 59 C340.0 22.0 368 22.0 390 22.0" fill="none" stroke="var(--down)" stroke-width="2" marker-end="url(#ad)"/><text x="312" y="16.0" style="fill:var(--down)">/ 1024</text><path d="M428.0 41 C428.0 78.0 400 78.0 378 78.0" fill="none" stroke="var(--up)" stroke-width="2" marker-end="url(#au)"/><text x="384" y="96.0" style="fill:var(--up)">× 1024</text></svg>
+      <div class="rule"><span class="tag up">Gran → petita</span><span>multiplica per 1024 (o per 8 de byte a bit)</span></div>
+      <div class="rule"><span class="tag down">Petita → gran</span><span>divideix per 1024 (o per 8 de bit a byte)</span></div>
+    </section>
+
+    <section class="box c6">
+      <h2>Taula d’unitats</h2>
+      <div class="scroll">
+      <table>
+        <thead><tr><th>Nom</th><th>Símbol</th><th>Potència</th><th>Bytes</th></tr></thead>
+        <tr><td>Nibble (quartet)</td><td></td><td></td><td class="n">4 bits</td></tr>
+        <tr><td>Byte</td><td>B</td><td></td><td class="n">8 bits</td></tr>
+        <tr><td>kilobyte</td><td>KB</td><td>2^10</td><td class="n">1.024</td></tr>
+        <tr><td>megabyte</td><td>MB</td><td>2^20</td><td class="n">1.048.576</td></tr>
+        <tr><td>gigabyte</td><td>GB</td><td>2^30</td><td class="n">1.073.741.824</td></tr>
+        <tr><td>terabyte</td><td>TB</td><td>2^40</td><td class="n">1.099.511.627.776</td></tr>
+        <tr><td>petabyte</td><td>PB</td><td>2^50</td><td class="n">1.125.899.906.842.624</td></tr>
+        <tr><td>exabyte</td><td>EB</td><td>2^60</td><td class="n">1.152.921.504.606.846.976</td></tr>
+        <tr><td>zettabyte</td><td>ZB</td><td>2^70</td><td class="n">1.180.591.620.717.411.303.424</td></tr>
+        <tr><td>yottabyte</td><td>YB</td><td>2^80</td><td class="n">1.208.925.819.614.629.174.706.176</td></tr>
+      </table>
+      </div>
+    </section>
+
+    <section class="box c6">
+      <h2>Exemple: de gran a petita</h2>
+      <p>Passa 2 TB a KB.</p>
+      <ol class="steps">
+        <li>2 TB = 2 × 1024 GB</li>
+        <li>= 2 × 1024 × 1024 MB</li>
+        <li>= 2 × 1024 × 1024 × 1024 KB</li>
+        <li class="up">= 2.147.483.648 KB</li>
+      </ol>
+    </section>
+
+    <section class="box c6">
+      <h2>Exemple: de petita a gran</h2>
+      <p>Torna de 2.147.483.648 KB a TB.</p>
+      <ol class="steps">
+        <li>2.147.483.648 KB / 1024 = 2.097.152 MB</li>
+        <li>2.097.152 MB / 1024 = 2048 GB</li>
+        <li>2048 GB / 1024</li>
+        <li class="down">= 2 TB</li>
+      </ol>
+    </section>
+
+    <section class="box c12">
+      <h2>Fórmules de la transferència</h2>
+      <div class="grid" style="gap:10px">
+        <div class="formula c4" style="grid-column:span 4">S = BW × T</div>
+        <div class="formula c4" style="grid-column:span 4">T = S / BW</div>
+        <div class="formula c4" style="grid-column:span 4">BW = S / T</div>
+      </div>
+      <p class="note">S = mida de les dades, BW = taxa o amplada de banda, T = temps. Abans de dividir, passa S i BW a la mateixa unitat de bits o de bytes: les taxes van en bits per segon (Mbps) i les mides en bytes (MB).</p>
+    </section>
+
+  </div>
+</main>
+<style>@media(max-width:760px){.formula[style]{grid-column:span 12!important}}</style>
+</body>
+</html>
